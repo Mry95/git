@@ -1,0 +1,277 @@
+import { connect } from "dva";
+sfldjfsl
+import ReactEcharts from "echarts-for-react";
+顶顶顶顶
+import { getChartData, getChartLegend, transferBarData } from "@/utils/utils";
+
+import style from "./index.css";
+
+const Statistics = ({ title, exam_scale, subject_scale, type_scale }) => {
+
+  const examChartData = getChartData("exam_name", "num", exam_scale);
+
+  const examChartLegend = getChartLegend("exam_name", examChartData);
+
+  const examOption = {
+
+​    title: {
+
+​      text: "*题目类型统计",
+
+​      x: "center"
+
+​    },
+
+​    tooltip: {
+
+​      trigger: "item",
+
+​      formatter: "{a} <br/>{b} : {c} ({d}%)"
+
+​    },
+
+​    legend: {
+
+​      orient: "vertical",
+
+​      left: "left",
+
+​      data: examChartLegend
+
+​    },
+
+​    series: [
+
+​      {
+
+​        name: "访问来源",
+
+​        type: "pie",
+
+​        radius: ["50%", "70%"],
+
+​        data: examChartData,
+
+​        itemStyle: {
+
+​          emphasis: {
+
+​            shadowBlur: 10,
+
+​            shadowOffsetX: 0,
+
+​            shadowColor: "rgba(0, 0, 0, 0.5)"
+
+​          }
+
+​        }
+
+​      }
+
+​    ]
+
+  };
+
+  const typeChartData = getChartData("questions_type_text", "num", type_scale);
+
+  const typeChartLegend = getChartLegend("questions_type_text", typeChartData);
+
+  const typeOption = {
+
+​    title: {
+
+​      text: "*题目类型统计",
+
+​      x: "center"
+
+​    },
+
+​    tooltip: {
+
+​      trigger: "item",
+
+​      formatter: "{a} <br/>{b} : {c} ({d}%)"
+
+​    },
+
+​    legend: {
+
+​      orient: "vertical",
+
+​      left: "left",
+
+​      data: typeChartLegend
+
+​    },
+
+​    series: [
+
+​      {
+
+​        name: "访问来源",
+
+​        type: "pie",
+
+​        radius: ["50%", "70%"],
+
+​        data: typeChartData,
+
+​        itemStyle: {
+
+​          emphasis: {
+
+​            shadowBlur: 10,
+
+​            shadowOffsetX: 0,
+
+​            shadowColor: "rgba(0, 0, 0, 0.5)"
+
+​          }
+
+​        }
+
+​      }
+
+​    ]
+
+  };
+
+  const subjectChartData = getChartData("subject_text", "num", subject_scale);
+
+  const subjectBarData = transferBarData(subjectChartData);
+
+  const subjectOption = {
+
+​    title: {
+
+​      text: "*题目类型统计"
+
+​    },
+
+​    color: ["#d39dff"],
+
+​    tooltip: {
+
+​      trigger: "axis",
+
+​      axisPointer: {
+
+​        type: "shadow"
+
+​      }
+
+​    },
+
+​    grid: {
+
+​      left: "3%",
+
+​      right: "4%",
+
+​      bottom: "3%",
+
+​      containLabel: true
+
+​    },
+
+​    xAxis: [
+
+​      {
+
+​        type: "category",
+
+​        data: subjectBarData.legends,
+
+​        axisTick: {
+
+​          alignWithLabel: true
+
+​        }
+
+​      }
+
+​    ],
+
+​    yAxis: [
+
+​      {
+
+​        type: "value"
+
+​      }
+
+​    ],
+
+​    series: [
+
+​      {
+
+​        name: "直接访问",
+
+​        type: "bar",
+
+​        barWidth: "60%",
+
+​        data: subjectBarData.values
+
+​      }
+
+​    ]
+
+  };
+
+  return (
+
+    <div>
+
+​      <h2>{title}</h2>
+
+      <div className={style.wrapper}>
+
+        <div className={style.box}>
+
+          <div className={style.container1}>
+
+​            <ReactEcharts option={examOption} />
+
+​          </div>
+
+          <div className={style.container1}>
+
+​            <ReactEcharts option={typeOption} />
+
+​          </div>
+
+​        </div>
+
+
+
+        <div className={style.container2}>
+
+​          <ReactEcharts option={subjectOption} />
+
+​        </div>
+
+​      </div>
+
+​    </div>
+
+  );
+
+};
+
+const mapStateToProps = state => {
+
+  return {
+
+​    exam_scale: state.home.data.exam_scale,
+
+​    subject_scale: state.home.data.subject_scale,
+
+​    type_scale: state.home.data.type_scale
+
+  };
+
+};
+
+export default connect(mapStateToProps)(Statistics);
